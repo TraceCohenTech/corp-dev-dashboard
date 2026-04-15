@@ -1,5 +1,4 @@
 import { companies } from '../data/companies'
-import { tierColors } from '../data/companies'
 
 export function KPICards() {
   const totalDeals = companies.reduce((s, c) => s + c.acquisitions.filter(a => !a.failed).length, 0)
