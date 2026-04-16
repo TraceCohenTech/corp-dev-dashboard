@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { companies, tierColors } from '../data/companies'
-import type { Company, MATier } from '../types'
+import type { Company, MATier, Industry } from '../types'
 
 type SortKey = 'name' | 'dealCount' | 'totalSpendNum' | 'tier'
 
@@ -18,6 +18,7 @@ export function CompanyTable() {
   const [search, setSearch] = useState('')
   const [tierFilter, setTierFilter] = useState<MATier | 'All'>('All')
   const [cvcFilter, setCvcFilter] = useState<'All' | 'Yes' | 'No'>('All')
+  const [industryFilter, setIndustryFilter] = useState<Industry | 'All'>('All')
   const [sortKey, setSortKey] = useState<SortKey>('dealCount')
   const [sortAsc, setSortAsc] = useState(false)
 
@@ -32,6 +33,7 @@ export function CompanyTable() {
       )
     }
     if (tierFilter !== 'All') list = list.filter(c => c.tier === tierFilter)
+    if (industryFilter !== 'All') list = list.filter(c => c.industry === industryFilter)
     if (cvcFilter === 'Yes') list = list.filter(c => c.cvc !== null)
     if (cvcFilter === 'No') list = list.filter(c => c.cvc === null)
 
@@ -44,7 +46,7 @@ export function CompanyTable() {
       return sortAsc ? cmp : -cmp
     })
     return list
-  }, [search, tierFilter, cvcFilter, sortKey, sortAsc])
+  }, [search, tierFilter, industryFilter, cvcFilter, sortKey, sortAsc])
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) setSortAsc(!sortAsc)
@@ -93,6 +95,23 @@ export function CompanyTable() {
             <option value="Minimal">Minimal</option>
           </select>
           <select
+            value={industryFilter}
+            onChange={e => setIndustryFilter(e.target.value as Industry | 'All')}
+            className="bg-base border border-border rounded-lg px-3 py-2 text-sm text-slate-700 focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20 transition-all"
+          >
+            <option value="All">All Industries</option>
+            <option value="Cybersecurity">Cybersecurity</option>
+            <option value="Cloud & Infrastructure">Cloud & Infrastructure</option>
+            <option value="Enterprise Software">Enterprise Software</option>
+            <option value="Developer Tools">Developer Tools</option>
+            <option value="Productivity & Design">Productivity & Design</option>
+            <option value="Marketing & CX">Marketing & CX</option>
+            <option value="Fintech & Commerce">Fintech & Commerce</option>
+            <option value="Data & Analytics">Data & Analytics</option>
+            <option value="Vertical SaaS">Vertical SaaS</option>
+            <option value="HR Tech">HR Tech</option>
+          </select>
+          <select
             value={cvcFilter}
             onChange={e => setCvcFilter(e.target.value as 'All' | 'Yes' | 'No')}
             className="bg-base border border-border rounded-lg px-3 py-2 text-sm text-slate-700 focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20 transition-all"
@@ -117,6 +136,7 @@ export function CompanyTable() {
                   </span>
                 </th>
                 <th className="px-3 py-3 font-semibold text-slate-500 text-[11px] uppercase tracking-[0.08em] text-left">Ticker</th>
+                <th className="px-3 py-3 font-semibold text-slate-500 text-[11px] uppercase tracking-[0.08em] text-left hidden lg:table-cell">Industry</th>
                 <th className="px-3 py-3 font-semibold text-slate-500 text-[11px] uppercase tracking-[0.08em] text-left">Corp Dev Lead</th>
                 <th
                   className="px-3 py-3 font-semibold text-slate-500 whitespace-nowrap cursor-pointer hover:text-slate-900 transition-colors select-none text-[11px] uppercase tracking-[0.08em] text-left"
@@ -181,6 +201,9 @@ function CompanyRow({ company: c, index, isExpanded, onToggle }: { company: Comp
           {c.name}
         </td>
         <td className="px-3 py-3 font-mono font-bold text-[var(--accent)] text-xs">{c.ticker}</td>
+        <td className="px-3 py-3 hidden lg:table-cell">
+          <span className="text-xs text-slate-600 font-medium">{c.industry}</span>
+        </td>
         <td className="px-3 py-3">
           {c.corpDev.name ? (
             <div>
@@ -223,7 +246,7 @@ function CompanyRow({ company: c, index, isExpanded, onToggle }: { company: Comp
       </tr>
       {isExpanded && (
         <tr>
-          <td colSpan={7} className="bg-slate-50/80 px-4 sm:px-6 py-4 border-t border-border/60">
+          <td colSpan={8} className="bg-slate-50/80 px-4 sm:px-6 py-4 border-t border-border/60">
             <div className="max-w-4xl">
               {c.notes && (
                 <p className="text-sm text-slate-600 mb-3 italic">{c.notes}</p>

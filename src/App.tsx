@@ -2,9 +2,14 @@ import { Header } from './components/Header'
 import { KPICards } from './components/KPICards'
 import { ActivityTierChart } from './components/ActivityTierChart'
 import { DealTimeline } from './components/DealTimeline'
+import { IndustryChart } from './components/IndustryChart'
+import { DealSizeChart } from './components/DealSizeChart'
+import { MegaDeals } from './components/MegaDeals'
+import { FunFacts } from './components/FunFacts'
 import { CompanyTable } from './components/CompanyTable'
 import { CVCTable } from './components/CVCTable'
 import { Footer } from './components/Footer'
+import { companies } from './data/companies'
 
 function App() {
   return (
@@ -19,17 +24,29 @@ function App() {
               Key Metrics
             </h2>
             <span className="text-xs text-slate-500 hidden sm:block font-medium">
-              36 companies · updated Apr 2026
+              {companies.length} companies · updated Apr 2026
             </span>
           </div>
           <KPICards />
         </section>
 
-        {/* Charts */}
+        {/* Activity + Timeline charts */}
         <section className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-5">
           <ActivityTierChart />
           <DealTimeline />
         </section>
+
+        {/* Industry + Deal Size charts */}
+        <section className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-5">
+          <IndustryChart />
+          <DealSizeChart />
+        </section>
+
+        {/* Mega deals spotlight */}
+        <MegaDeals />
+
+        {/* Fun facts */}
+        <FunFacts />
 
         {/* Company directory */}
         <CompanyTable />

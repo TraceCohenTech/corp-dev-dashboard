@@ -20,9 +20,22 @@ export interface CorpDevContact {
 
 export type MATier = 'Very Active' | 'Active' | 'Moderate' | 'Low' | 'Minimal' | 'N/A'
 
+export type Industry =
+  | 'Cybersecurity'
+  | 'Cloud & Infrastructure'
+  | 'Enterprise Software'
+  | 'Developer Tools'
+  | 'Productivity & Design'
+  | 'Marketing & CX'
+  | 'Fintech & Commerce'
+  | 'Data & Analytics'
+  | 'Vertical SaaS'
+  | 'HR Tech'
+
 export interface Company {
   name: string
   ticker: string
+  industry: Industry
   tier: MATier
   dealCount: number
   totalSpend: string
